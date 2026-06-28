@@ -1,25 +1,25 @@
-const video = document.getElementById("mainVideo");
-const player = document.getElementById("player");
-const playerControls = document.getElementById("playerControls");
-const centerPlayBtn = document.getElementById("centerPlayBtn");
-const playPauseBtn = document.getElementById("playPauseBtn");
-const muteBtn = document.getElementById("muteBtn");
-const volumeSlider = document.getElementById("volumeSlider");
-const currentTimeElement = document.getElementById("currentTime");
-const durationElement = document.getElementById("duration");
-const progressArea = document.getElementById("progressArea");
-const progressPlayed = document.getElementById("progressPlayed");
-const progressBuffered = document.getElementById("progressBuffered");
-const progressThumb = document.getElementById("progressThumb");
-const speedSelect = document.getElementById("speedSelect");
-const fullscreenBtn = document.getElementById("fullscreenBtn");
+const video = document.getElementById('mainVideo');
+const player = document.getElementById('player');
+const playerControls = document.getElementById('playerControls');
+const centerPlayBtn = document.getElementById('centerPlayBtn');
+const playPauseBtn = document.getElementById('playPauseBtn');
+const muteBtn = document.getElementById('muteBtn');
+const volumeSlider = document.getElementById('volumeSlider');
+const currentTimeElement = document.getElementById('currentTime');
+const durationElement = document.getElementById('duration');
+const progressArea = document.getElementById('progressArea');
+const progressPlayed = document.getElementById('progressPlayed');
+const progressBuffered = document.getElementById('progressBuffered');
+const progressThumb = document.getElementById('progressThumb');
+const speedSelect = document.getElementById('speedSelect');
+const fullscreenBtn = document.getElementById('fullscreenBtn');
 
-const pauseMinutes = document.getElementById("pauseMinutes");
-const pauseSeconds = document.getElementById("pauseSeconds");
-const scheduleBtn = document.getElementById("scheduleBtn");
-const cancelScheduleBtn = document.getElementById("cancelScheduleBtn");
-const statusBox = document.getElementById("statusBox");
-const presetButtons = document.querySelectorAll(".preset-button");
+const pauseMinutes = document.getElementById('pauseMinutes');
+const pauseSeconds = document.getElementById('pauseSeconds');
+const scheduleBtn = document.getElementById('scheduleBtn');
+const cancelScheduleBtn = document.getElementById('cancelScheduleBtn');
+const statusBox = document.getElementById('statusBox');
+const presetButtons = document.querySelectorAll('.preset-button');
 
 let controlsTimer = null;
 let isDraggingProgress = false;
@@ -28,7 +28,7 @@ let previousVolume = 1;
 
 function formatTime(value) {
   if (!Number.isFinite(value) || value < 0) {
-    return "0:00";
+    return '0:00';
   }
 
   const totalSeconds = Math.floor(value);
@@ -37,22 +37,22 @@ function formatTime(value) {
   const seconds = totalSeconds % 60;
 
   if (hours > 0) {
-    return `${hours}:${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+    return `${hours}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
   }
 
-  return `${minutes}:${String(seconds).padStart(2, "0")}`;
+  return `${minutes}:${String(seconds).padStart(2, '0')}`;
 }
 
-function setStatus(message, type = "default") {
+function setStatus(message, type = 'default') {
   statusBox.textContent = message;
-  statusBox.classList.remove("is-active", "is-error");
+  statusBox.classList.remove('is-active', 'is-error');
 
-  if (type === "active") {
-    statusBox.classList.add("is-active");
+  if (type === 'active') {
+    statusBox.classList.add('is-active');
   }
 
-  if (type === "error") {
-    statusBox.classList.add("is-error");
+  if (type === 'error') {
+    statusBox.classList.add('is-error');
   }
 }
 
@@ -66,7 +66,7 @@ async function togglePlayback() {
       video.muted = false;
 
       if (Number(volumeSlider.value) === 0) {
-        volumeSlider.value = "1";
+        volumeSlider.value = '1';
         video.volume = 1;
       }
 
@@ -75,10 +75,10 @@ async function togglePlayback() {
       video.pause();
     }
   } catch (error) {
-    console.error("No fue posible reproducir el video:", error);
+    console.error('No fue posible reproducir el video:', error);
     setStatus(
-      "El navegador bloqueó la reproducción. Presiona nuevamente el botón de reproducción.",
-      "error",
+      'El navegador bloqueó la reproducción. Presiona nuevamente el botón de reproducción.',
+      'error',
     );
   }
 }
@@ -86,14 +86,11 @@ async function togglePlayback() {
 function updatePlaybackState() {
   const isPlaying = !video.paused && !video.ended;
 
-  player.classList.toggle("is-playing", isPlaying);
-  playPauseBtn.setAttribute(
-    "aria-label",
-    isPlaying ? "Pausar" : "Reproducir",
-  );
+  player.classList.toggle('is-playing', isPlaying);
+  playPauseBtn.setAttribute('aria-label', isPlaying ? 'Pausar' : 'Reproducir');
   centerPlayBtn.setAttribute(
-    "aria-label",
-    isPlaying ? "Pausar video" : "Reproducir video",
+    'aria-label',
+    isPlaying ? 'Pausar video' : 'Reproducir video',
   );
 
   if (isPlaying) {
@@ -106,11 +103,8 @@ function updatePlaybackState() {
 function updateVolumeState() {
   const isMuted = video.muted || video.volume === 0;
 
-  player.classList.toggle("is-muted", isMuted);
-  muteBtn.setAttribute(
-    "aria-label",
-    isMuted ? "Activar sonido" : "Silenciar",
-  );
+  player.classList.toggle('is-muted', isMuted);
+  muteBtn.setAttribute('aria-label', isMuted ? 'Activar sonido' : 'Silenciar');
 
   if (!video.muted) {
     volumeSlider.value = String(video.volume);
@@ -143,9 +137,9 @@ function updateProgress() {
   }
 
   currentTimeElement.textContent = formatTime(video.currentTime);
-  progressArea.setAttribute("aria-valuenow", String(Math.round(percentage)));
+  progressArea.setAttribute('aria-valuenow', String(Math.round(percentage)));
   progressArea.setAttribute(
-    "aria-valuetext",
+    'aria-valuetext',
     `${formatTime(video.currentTime)} de ${formatTime(video.duration)}`,
   );
 
@@ -162,10 +156,7 @@ function updateBufferedProgress() {
   }
 
   const bufferedEnd = video.buffered.end(video.buffered.length - 1);
-  const percentage = Math.min(
-    100,
-    (bufferedEnd / video.duration) * 100,
-  );
+  const percentage = Math.min(100, (bufferedEnd / video.duration) * 100);
 
   progressBuffered.style.width = `${percentage}%`;
 }
@@ -188,7 +179,7 @@ function seekFromPointer(event) {
 }
 
 function showControls() {
-  player.classList.remove("controls-hidden");
+  player.classList.remove('controls-hidden');
   clearTimeout(controlsTimer);
 }
 
@@ -200,7 +191,7 @@ function scheduleControlsHide() {
   }
 
   controlsTimer = window.setTimeout(() => {
-    player.classList.add("controls-hidden");
+    player.classList.add('controls-hidden');
   }, 2400);
 }
 
@@ -212,16 +203,16 @@ async function toggleFullscreen() {
       await document.exitFullscreen();
     }
   } catch (error) {
-    console.error("No fue posible cambiar a pantalla completa:", error);
+    console.error('No fue posible cambiar a pantalla completa:', error);
   }
 }
 
 function updateFullscreenState() {
   const isFullscreen = document.fullscreenElement === player;
-  player.classList.toggle("is-fullscreen", isFullscreen);
+  player.classList.toggle('is-fullscreen', isFullscreen);
   fullscreenBtn.setAttribute(
-    "aria-label",
-    isFullscreen ? "Salir de pantalla completa" : "Pantalla completa",
+    'aria-label',
+    isFullscreen ? 'Salir de pantalla completa' : 'Pantalla completa',
   );
 }
 
@@ -243,36 +234,29 @@ function getScheduledTime() {
 }
 
 function schedulePause() {
-  const targetTime = getScheduledTime();
+  const delaySeconds = getScheduledTime();
 
-  if (targetTime === null) {
-    setStatus(
-      "Ingresa minutos válidos y segundos entre 0 y 59.",
-      "error",
-    );
+  if (delaySeconds === null || delaySeconds <= 0) {
+    setStatus('Ingresa un tiempo mayor que cero.', 'error');
     return;
   }
 
   if (!Number.isFinite(video.duration)) {
     setStatus(
-      "Espera a que el video termine de cargar antes de programar la pausa.",
-      "error",
+      'Espera a que el video termine de cargar antes de programar la pausa.',
+      'error',
     );
     return;
   }
 
-  if (targetTime <= video.currentTime) {
-    setStatus(
-      `El tiempo debe ser posterior a la posición actual (${formatTime(video.currentTime)}).`,
-      "error",
-    );
-    return;
-  }
+  const targetTime = video.currentTime + delaySeconds;
 
   if (targetTime > video.duration) {
+    const remainingTime = video.duration - video.currentTime;
+
     setStatus(
-      `El tiempo indicado supera la duración del video (${formatTime(video.duration)}).`,
-      "error",
+      `El video solamente tiene ${formatTime(remainingTime)} restantes.`,
+      'error',
     );
     return;
   }
@@ -281,15 +265,15 @@ function schedulePause() {
   cancelScheduleBtn.disabled = false;
 
   setStatus(
-    `La reproducción se pausará en ${formatTime(scheduledPauseTime)}.`,
-    "active",
+    `El video se pausará dentro de ${formatTime(delaySeconds)}.`,
+    'active',
   );
 }
 
 function cancelScheduledPause() {
   scheduledPauseTime = null;
   cancelScheduleBtn.disabled = true;
-  setStatus("No hay una pausa programada.");
+  setStatus('No hay una pausa programada.');
 }
 
 function checkScheduledPause() {
@@ -306,7 +290,7 @@ function checkScheduledPause() {
 
     setStatus(
       `El video se pausó automáticamente en ${formatTime(completedTime)}.`,
-      "active",
+      'active',
     );
   }
 }
@@ -315,8 +299,8 @@ function applyPreset(totalSeconds, selectedButton) {
   pauseMinutes.value = String(Math.floor(totalSeconds / 60));
   pauseSeconds.value = String(totalSeconds % 60);
 
-  presetButtons.forEach((button) => {
-    button.classList.toggle("active", button === selectedButton);
+  presetButtons.forEach(button => {
+    button.classList.toggle('active', button === selectedButton);
   });
 }
 
@@ -334,40 +318,37 @@ function handleKeyboard(event) {
 
   const key = event.key.toLowerCase();
 
-  if (key === " " || key === "k") {
+  if (key === ' ' || key === 'k') {
     event.preventDefault();
     togglePlayback();
   }
 
-  if (key === "m") {
+  if (key === 'm') {
     toggleMute();
   }
 
-  if (key === "f") {
+  if (key === 'f') {
     toggleFullscreen();
   }
 
-  if (event.key === "ArrowLeft") {
+  if (event.key === 'ArrowLeft') {
     event.preventDefault();
     video.currentTime = Math.max(0, video.currentTime - 5);
   }
 
-  if (event.key === "ArrowRight") {
+  if (event.key === 'ArrowRight') {
     event.preventDefault();
-    video.currentTime = Math.min(
-      video.duration || 0,
-      video.currentTime + 5,
-    );
+    video.currentTime = Math.min(video.duration || 0, video.currentTime + 5);
   }
 }
 
-playPauseBtn.addEventListener("click", togglePlayback);
-centerPlayBtn.addEventListener("click", togglePlayback);
-video.addEventListener("click", togglePlayback);
+playPauseBtn.addEventListener('click', togglePlayback);
+centerPlayBtn.addEventListener('click', togglePlayback);
+video.addEventListener('click', togglePlayback);
 
-muteBtn.addEventListener("click", toggleMute);
+muteBtn.addEventListener('click', toggleMute);
 
-volumeSlider.addEventListener("input", () => {
+volumeSlider.addEventListener('input', () => {
   const volume = Number(volumeSlider.value);
 
   video.volume = volume;
@@ -380,107 +361,104 @@ volumeSlider.addEventListener("input", () => {
   updateVolumeState();
 });
 
-speedSelect.addEventListener("change", () => {
+speedSelect.addEventListener('change', () => {
   video.playbackRate = Number(speedSelect.value);
 });
 
-fullscreenBtn.addEventListener("click", toggleFullscreen);
-document.addEventListener("fullscreenchange", updateFullscreenState);
+fullscreenBtn.addEventListener('click', toggleFullscreen);
+document.addEventListener('fullscreenchange', updateFullscreenState);
 
-progressArea.addEventListener("pointerdown", (event) => {
+progressArea.addEventListener('pointerdown', event => {
   isDraggingProgress = true;
-  progressArea.classList.add("is-dragging");
+  progressArea.classList.add('is-dragging');
   progressArea.setPointerCapture(event.pointerId);
   seekFromPointer(event);
   showControls();
 });
 
-progressArea.addEventListener("pointermove", (event) => {
+progressArea.addEventListener('pointermove', event => {
   if (isDraggingProgress) {
     seekFromPointer(event);
   }
 });
 
-progressArea.addEventListener("pointerup", (event) => {
+progressArea.addEventListener('pointerup', event => {
   isDraggingProgress = false;
-  progressArea.classList.remove("is-dragging");
+  progressArea.classList.remove('is-dragging');
   progressArea.releasePointerCapture(event.pointerId);
   scheduleControlsHide();
 });
 
-progressArea.addEventListener("keydown", (event) => {
-  if (event.key === "ArrowLeft") {
+progressArea.addEventListener('keydown', event => {
+  if (event.key === 'ArrowLeft') {
     event.preventDefault();
     video.currentTime = Math.max(0, video.currentTime - 5);
   }
 
-  if (event.key === "ArrowRight") {
+  if (event.key === 'ArrowRight') {
     event.preventDefault();
-    video.currentTime = Math.min(
-      video.duration || 0,
-      video.currentTime + 5,
-    );
+    video.currentTime = Math.min(video.duration || 0, video.currentTime + 5);
   }
 });
 
-player.addEventListener("mousemove", () => {
+player.addEventListener('mousemove', () => {
   showControls();
   scheduleControlsHide();
 });
 
-player.addEventListener("mouseleave", () => {
+player.addEventListener('mouseleave', () => {
   scheduleControlsHide();
 });
 
-player.addEventListener("touchstart", showControls, { passive: true });
+player.addEventListener('touchstart', showControls, { passive: true });
 
-video.addEventListener("loadedmetadata", () => {
+video.addEventListener('loadedmetadata', () => {
   durationElement.textContent = formatTime(video.duration);
   updateProgress();
 });
 
-video.addEventListener("durationchange", () => {
+video.addEventListener('durationchange', () => {
   durationElement.textContent = formatTime(video.duration);
 });
 
-video.addEventListener("timeupdate", updateProgress);
-video.addEventListener("progress", updateBufferedProgress);
-video.addEventListener("play", updatePlaybackState);
-video.addEventListener("pause", updatePlaybackState);
-video.addEventListener("ended", updatePlaybackState);
-video.addEventListener("volumechange", updateVolumeState);
+video.addEventListener('timeupdate', updateProgress);
+video.addEventListener('progress', updateBufferedProgress);
+video.addEventListener('play', updatePlaybackState);
+video.addEventListener('pause', updatePlaybackState);
+video.addEventListener('ended', updatePlaybackState);
+video.addEventListener('volumechange', updateVolumeState);
 
-video.addEventListener("waiting", () => {
-  player.classList.add("is-loading");
+video.addEventListener('waiting', () => {
+  player.classList.add('is-loading');
 });
 
-video.addEventListener("playing", () => {
-  player.classList.remove("is-loading");
+video.addEventListener('playing', () => {
+  player.classList.remove('is-loading');
 });
 
-video.addEventListener("canplay", () => {
-  player.classList.remove("is-loading");
+video.addEventListener('canplay', () => {
+  player.classList.remove('is-loading');
 });
 
-video.addEventListener("error", () => {
-  player.classList.remove("is-loading");
+video.addEventListener('error', () => {
+  player.classList.remove('is-loading');
   setStatus(
-    "No se pudo cargar el video. Verifica la URL del archivo en GitHub Releases.",
-    "error",
+    'No se pudo cargar el video. Verifica la URL del archivo en GitHub Releases.',
+    'error',
   );
 });
 
-scheduleBtn.addEventListener("click", schedulePause);
-cancelScheduleBtn.addEventListener("click", cancelScheduledPause);
+scheduleBtn.addEventListener('click', schedulePause);
+cancelScheduleBtn.addEventListener('click', cancelScheduledPause);
 
-presetButtons.forEach((button) => {
-  button.addEventListener("click", () => {
+presetButtons.forEach(button => {
+  button.addEventListener('click', () => {
     const seconds = Number(button.dataset.seconds);
     applyPreset(seconds, button);
   });
 });
 
-document.addEventListener("keydown", handleKeyboard);
+document.addEventListener('keydown', handleKeyboard);
 
 /*
  * Estado inicial:
@@ -493,7 +471,7 @@ document.addEventListener("keydown", handleKeyboard);
  */
 video.volume = 1;
 video.muted = false;
-volumeSlider.value = "1";
+volumeSlider.value = '1';
 
 updatePlaybackState();
 updateVolumeState();
