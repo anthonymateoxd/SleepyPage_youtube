@@ -14,9 +14,12 @@ const progressThumb = document.getElementById('progressThumb');
 const speedSelect = document.getElementById('speedSelect');
 const fullscreenBtn = document.getElementById('fullscreenBtn');
 
-const pauseMinutes = document.getElementById('pauseMinutes');
-const pauseSeconds = document.getElementById('pauseSeconds');
-const scheduleBtn = document.getElementById('scheduleBtn');
+const customMinutes = document.getElementById('customMinutes');
+const timerOptions = document.querySelectorAll('.timer-option');
+
+let selectedMinutes = 1;
+let scheduledPauseTime = null;
+
 const cancelScheduleBtn = document.getElementById('cancelScheduleBtn');
 const statusBox = document.getElementById('statusBox');
 const presetButtons = document.querySelectorAll('.preset-button');
@@ -216,64 +219,11 @@ function updateFullscreenState() {
   );
 }
 
-function getScheduledTime() {
-  const minutes = Number.parseInt(pauseMinutes.value, 10);
-  const seconds = Number.parseInt(pauseSeconds.value, 10);
-
-  if (
-    !Number.isInteger(minutes) ||
-    !Number.isInteger(seconds) ||
-    minutes < 0 ||
-    seconds < 0 ||
-    seconds > 59
-  ) {
-    return null;
-  }
-
-  return minutes * 60 + seconds;
-}
-
-function schedulePause() {
-  const delaySeconds = getScheduledTime();
-
-  if (delaySeconds === null || delaySeconds <= 0) {
-    setStatus('Ingresa un tiempo mayor que cero.', 'error');
-    return;
-  }
-
-  if (!Number.isFinite(video.duration)) {
-    setStatus(
-      'Espera a que el video termine de cargar antes de programar la pausa.',
-      'error',
-    );
-    return;
-  }
-
-  const targetTime = video.currentTime + delaySeconds;
-
-  if (targetTime > video.duration) {
-    const remainingTime = video.duration - video.currentTime;
-
-    setStatus(
-      `El video solamente tiene ${formatTime(remainingTime)} restantes.`,
-      'error',
-    );
-    return;
-  }
-
-  scheduledPauseTime = targetTime;
-  cancelScheduleBtn.disabled = false;
-
-  setStatus(
-    `El video se pausará dentro de ${formatTime(delaySeconds)}.`,
-    'active',
-  );
-}
-
 function cancelScheduledPause() {
   scheduledPauseTime = null;
   cancelScheduleBtn.disabled = true;
-  setStatus('No hay una pausa programada.');
+
+  setStatus('El temporizador fue cancelado.');
 }
 
 function checkScheduledPause() {
@@ -282,26 +232,18 @@ function checkScheduledPause() {
   }
 
   if (video.currentTime >= scheduledPauseTime) {
-    const completedTime = scheduledPauseTime;
-
     video.pause();
-    scheduledPauseTime = null;
-    cancelScheduleBtn.disabled = true;
 
-    setStatus(
-      `El video se pausó automáticamente en ${formatTime(completedTime)}.`,
-      'active',
-    );
+    ```
+scheduledPauseTime = null;
+cancelScheduleBtn.disabled = true;
+
+setStatus(
+  "El temporizador terminó y el video fue pausado.",
+  "active",
+);
+```;
   }
-}
-
-function applyPreset(totalSeconds, selectedButton) {
-  pauseMinutes.value = String(Math.floor(totalSeconds / 60));
-  pauseSeconds.value = String(totalSeconds % 60);
-
-  presetButtons.forEach(button => {
-    button.classList.toggle('active', button === selectedButton);
-  });
 }
 
 function handleKeyboard(event) {
@@ -364,6 +306,62 @@ volumeSlider.addEventListener('input', () => {
 speedSelect.addEventListener('change', () => {
   video.playbackRate = Number(speedSelect.value);
 });
+
+function selectTimerOption(button) {
+  timerOptions.forEach(option => {
+    option.classList.remove('active');
+  });
+
+  button.classList.add('active');
+  selectedMinutes = Number(button.dataset.minutes);
+  customMinutes.value = '';
+}
+
+function getSelectedMinutes() {
+  const customValue = Number.parseInt(customMinutes.value, 10);
+
+  if (Number.isInteger(customValue) && customValue > 0) {
+    return customValue;
+  }
+
+  return selectedMinutes;
+}
+
+function schedulePause() {
+  const minutes = getSelectedMinutes();
+
+  if (!Number.isFinite(minutes) || minutes <= 0) {
+    setStatus('Selecciona o escribe una cantidad válida de minutos.', 'error');
+    return;
+  }
+
+  if (!Number.isFinite(video.duration)) {
+    setStatus('Espera a que el video termine de cargar.', 'error');
+    return;
+  }
+
+  const delaySeconds = minutes * 60;
+
+  /*
+
+* La pausa se calcula desde la posición actual.
+*
+* Ejemplo:
+* posición actual: 35:19
+* temporizador: 1 minuto
+* pausa: 36:19
+  */
+  scheduledPauseTime = video.currentTime + delaySeconds;
+
+  cancelScheduleBtn.disabled = false;
+
+  setStatus(
+    `El video se pausará después de ${minutes} ${
+      minutes === 1 ? 'minuto' : 'minutos'
+    }.`,
+    'active',
+  );
+}
 
 fullscreenBtn.addEventListener('click', toggleFullscreen);
 document.addEventListener('fullscreenchange', updateFullscreenState);
@@ -451,12 +449,22 @@ video.addEventListener('error', () => {
 scheduleBtn.addEventListener('click', schedulePause);
 cancelScheduleBtn.addEventListener('click', cancelScheduledPause);
 
-presetButtons.forEach(button => {
+timerOptions.forEach(button => {
   button.addEventListener('click', () => {
-    const seconds = Number(button.dataset.seconds);
-    applyPreset(seconds, button);
+    selectTimerOption(button);
   });
 });
+
+customMinutes.addEventListener('input', () => {
+  if (customMinutes.value !== '') {
+    timerOptions.forEach(option => {
+      option.classList.remove('active');
+    });
+  }
+});
+
+scheduleBtn.addEventListener('click', schedulePause);
+cancelScheduleBtn.addEventListener('click', cancelScheduledPause);
 
 document.addEventListener('keydown', handleKeyboard);
 

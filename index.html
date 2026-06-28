@@ -228,10 +228,20 @@
           </div>
 
           <div class="video-details">
-            <h1>Control de video con pausa programada</h1>
+            <h1>Maybe in another life</h1>
             <p>
-              Reproduce el video, ajusta el volumen y programa una pausa en un
-              tiempo específico.
+              Si tan solo hubiera sido más fácil, si tan solo hubiera sido más
+              rápido, si tan solo hubiera sido más fuerte, si tan solo hubiera
+              sido más valiente, si tan solo hubiera sido más inteligente, si
+              tan solo hubiera sido más amable, si tan solo hubiera sido más
+              paciente, si tan solo hubiera sido más generoso, si tan solo
+              hubiera sido más comprensivo, si tan solo hubiera sido más
+              honesto, si tan solo hubiera sido más humilde, si tan solo hubiera
+              sido más sabio, si tan solo hubiera sido más creativo, si tan solo
+              hubiera sido más apasionado, si tan solo hubiera sido más
+              decidido, si tan solo hubiera sido más persistente, si tan solo
+              hubiera sido más optimista, si tan solo hubiera sido más confiado,
+              si tan solo hubiera sido más valioso.
             </p>
           </div>
         </div>
@@ -239,75 +249,68 @@
         <aside class="side-panel">
           <section class="schedule-card">
             <div class="schedule-header">
-              <p class="eyebrow">Herramienta</p>
-              <h2>Pausa programada</h2>
+              <p class="eyebrow">TEMPORIZADOR</p>
+              <h2>Pausar después de</h2>
               <p>
-                Indica cuánto tiempo debe reproducirse el video antes de
-                pausarse.
+                Selecciona cuánto tiempo debe reproducirse el video antes de
+                detenerse.
               </p>
             </div>
 
-            <div class="time-inputs">
-              <label>
-                <span>Minutos</span>
-                <input
-                  id="pauseMinutes"
-                  type="number"
-                  min="0"
-                  value="0"
-                  inputmode="numeric"
-                />
-              </label>
+            <div class="timer-options">
+              <button
+                type="button"
+                class="timer-option active"
+                data-minutes="1"
+              >
+                1 min
+              </button>
 
-              <label>
-                <span>Segundos</span>
-                <input
-                  id="pauseSeconds"
-                  type="number"
-                  min="0"
-                  max="59"
-                  value="30"
-                  inputmode="numeric"
-                />
-              </label>
+              ```
+              <button
+                type="button"
+                class="timer-option"
+                data-minutes="5"
+              >
+                5 min
+              </button>
+
+              <button
+                type="button"
+                class="timer-option"
+                data-minutes="10"
+              >
+                10 min
+              </button>
+
+              <button
+                type="button"
+                class="timer-option"
+                data-minutes="15"
+              >
+                15 min
+              </button>
+              ```
             </div>
 
-            <div
-              class="preset-list"
-              aria-label="Tiempos rápidos"
-            >
-              <button
-                type="button"
-                class="preset-button"
-                data-seconds="60"
-              >
-                1 minuto
-              </button>
+            <label class="custom-time">
+              <span>Otro tiempo</span>
 
-              <button
-                type="button"
-                class="preset-button"
-                data-seconds="300"
-              >
-                5 minutos
-              </button>
+              ```
+              <div class="custom-time-field">
+                <input
+                  id="customMinutes"
+                  type="number"
+                  min="1"
+                  max="999"
+                  placeholder="Ejemplo: 20"
+                  inputmode="numeric"
+                />
 
-              <button
-                type="button"
-                class="preset-button"
-                data-seconds="600"
-              >
-                10 minutos
-              </button>
-
-              <button
-                type="button"
-                class="preset-button"
-                data-seconds="900"
-              >
-                15 minutos
-              </button>
-            </div>
+                <span>minutos</span>
+              </div>
+              ```
+            </label>
 
             <div class="schedule-actions">
               <button
@@ -315,9 +318,10 @@
                 id="scheduleBtn"
                 type="button"
               >
-                Programar pausa
+                Iniciar temporizador
               </button>
 
+              ```
               <button
                 class="secondary-button"
                 id="cancelScheduleBtn"
@@ -326,6 +330,7 @@
               >
                 Cancelar
               </button>
+              ```
             </div>
 
             <div
@@ -334,7 +339,7 @@
               role="status"
               aria-live="polite"
             >
-              No hay una pausa programada.
+              Selecciona un tiempo para comenzar.
             </div>
           </section>
 
