@@ -1,0 +1,365 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
+    <meta
+      name="description"
+      content="Reproductor de video con controles personalizados y pausa programada."
+    />
+    <title>SleepyPage</title>
+    <link
+      rel="stylesheet"
+      href="./style.css"
+    />
+  </head>
+
+  <body>
+    <header class="topbar">
+      <a
+        class="brand"
+        href="./"
+        aria-label="Inicio"
+      >
+        <span
+          class="brand-mark"
+          aria-hidden="true"
+        >
+          <svg viewBox="0 0 24 24">
+            <path d="M8.3 5.5 17 12l-8.7 6.5V5.5Z"></path>
+          </svg>
+        </span>
+        <span>SleepyPage</span>
+      </a>
+    </header>
+
+    <main class="page">
+      <section class="watch-layout">
+        <div class="main-column">
+          <div
+            class="player"
+            id="player"
+          >
+            <video
+              id="mainVideo"
+              playsinline
+              preload="metadata"
+            >
+              <source
+                src="https://github.com/anthonymateoxd/SleepyPage/releases/latest/download/dormir.mp4"
+                type="video/mp4"
+              />
+              Tu navegador no soporta la reproducción de video.
+            </video>
+
+            <button
+              class="center-play"
+              id="centerPlayBtn"
+              type="button"
+              aria-label="Reproducir video"
+            >
+              <svg
+                class="icon-play"
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+              >
+                <path d="M8 5v14l11-7L8 5Z"></path>
+              </svg>
+            </button>
+
+            <div
+              class="player-controls"
+              id="playerControls"
+            >
+              <div
+                class="progress-area"
+                id="progressArea"
+                role="slider"
+                aria-label="Progreso del video"
+                aria-valuemin="0"
+                aria-valuemax="100"
+                aria-valuenow="0"
+                tabindex="0"
+              >
+                <div class="progress-track">
+                  <div
+                    class="progress-buffered"
+                    id="progressBuffered"
+                  ></div>
+                  <div
+                    class="progress-played"
+                    id="progressPlayed"
+                  ></div>
+                  <div
+                    class="progress-thumb"
+                    id="progressThumb"
+                  ></div>
+                </div>
+              </div>
+
+              <div class="control-row">
+                <div class="control-group">
+                  <button
+                    class="icon-button"
+                    id="playPauseBtn"
+                    type="button"
+                    aria-label="Reproducir"
+                    title="Reproducir o pausar"
+                  >
+                    <svg
+                      class="icon icon-play"
+                      viewBox="0 0 24 24"
+                      aria-hidden="true"
+                    >
+                      <path d="M8 5v14l11-7L8 5Z"></path>
+                    </svg>
+                    <svg
+                      class="icon icon-pause"
+                      viewBox="0 0 24 24"
+                      aria-hidden="true"
+                    >
+                      <path d="M7 5h4v14H7V5Zm6 0h4v14h-4V5Z"></path>
+                    </svg>
+                  </button>
+
+                  <button
+                    class="icon-button"
+                    id="muteBtn"
+                    type="button"
+                    aria-label="Silenciar"
+                    title="Silenciar o activar sonido"
+                  >
+                    <svg
+                      class="icon icon-volume"
+                      viewBox="0 0 24 24"
+                      aria-hidden="true"
+                    >
+                      <path
+                        d="M4 9v6h4l5 4V5L8 9H4Zm11.5-.8v2.1c.9.5 1.5 1.5 1.5 2.7s-.6 2.2-1.5 2.7v2.1a5.5 5.5 0 0 0 0-9.6Z"
+                      ></path>
+                    </svg>
+                    <svg
+                      class="icon icon-muted"
+                      viewBox="0 0 24 24"
+                      aria-hidden="true"
+                    >
+                      <path
+                        d="M4 9v6h4l5 4V5L8 9H4Zm11.4.6 1.4-1.4 2.2 2.2 2.2-2.2 1.4 1.4-2.2 2.2 2.2 2.2-1.4 1.4-2.2-2.2-2.2 2.2-1.4-1.4 2.2-2.2-2.2-2.2Z"
+                      ></path>
+                    </svg>
+                  </button>
+
+                  <input
+                    class="volume-slider"
+                    id="volumeSlider"
+                    type="range"
+                    min="0"
+                    max="1"
+                    step="0.01"
+                    value="1"
+                    aria-label="Volumen"
+                  />
+
+                  <span class="time-display">
+                    <span id="currentTime">0:00</span>
+                    <span aria-hidden="true"> / </span>
+                    <span id="duration">0:00</span>
+                  </span>
+                </div>
+
+                <div class="control-group">
+                  <select
+                    class="speed-select"
+                    id="speedSelect"
+                    aria-label="Velocidad de reproducción"
+                    title="Velocidad de reproducción"
+                  >
+                    <option value="0.5">0.5x</option>
+                    <option value="0.75">0.75x</option>
+                    <option
+                      value="1"
+                      selected
+                    >
+                      1x
+                    </option>
+                    <option value="1.25">1.25x</option>
+                    <option value="1.5">1.5x</option>
+                    <option value="2">2x</option>
+                  </select>
+
+                  <button
+                    class="icon-button"
+                    id="fullscreenBtn"
+                    type="button"
+                    aria-label="Pantalla completa"
+                    title="Pantalla completa"
+                  >
+                    <svg
+                      class="icon icon-fullscreen"
+                      viewBox="0 0 24 24"
+                      aria-hidden="true"
+                    >
+                      <path
+                        d="M5 5h5v2H7v3H5V5Zm9 0h5v5h-2V7h-3V5ZM5 14h2v3h3v2H5v-5Zm12 0h2v5h-5v-2h3v-3Z"
+                      ></path>
+                    </svg>
+                    <svg
+                      class="icon icon-exit-fullscreen"
+                      viewBox="0 0 24 24"
+                      aria-hidden="true"
+                    >
+                      <path
+                        d="M8 5h2v5H5V8h3V5Zm6 0h2v3h3v2h-5V5ZM5 14h5v5H8v-3H5v-2Zm9 0h5v2h-3v3h-2v-5Z"
+                      ></path>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div
+              class="loading-indicator"
+              id="loadingIndicator"
+              aria-hidden="true"
+            ></div>
+          </div>
+
+          <div class="video-details">
+            <h1>Control de video con pausa programada</h1>
+            <p>
+              Reproduce el video, ajusta el volumen y programa una pausa en un
+              tiempo específico.
+            </p>
+          </div>
+        </div>
+
+        <aside class="side-panel">
+          <section class="schedule-card">
+            <div class="schedule-header">
+              <p class="eyebrow">Herramienta</p>
+              <h2>Pausa programada</h2>
+              <p>
+                Define el minuto y segundo exactos en los que el video debe
+                detenerse.
+              </p>
+            </div>
+
+            <div class="time-inputs">
+              <label>
+                <span>Minutos</span>
+                <input
+                  id="pauseMinutes"
+                  type="number"
+                  min="0"
+                  value="0"
+                  inputmode="numeric"
+                />
+              </label>
+
+              <label>
+                <span>Segundos</span>
+                <input
+                  id="pauseSeconds"
+                  type="number"
+                  min="0"
+                  max="59"
+                  value="30"
+                  inputmode="numeric"
+                />
+              </label>
+            </div>
+
+            <div
+              class="preset-list"
+              aria-label="Tiempos rápidos"
+            >
+              <button
+                type="button"
+                class="preset-button"
+                data-seconds="30"
+              >
+                0:30
+              </button>
+              <button
+                type="button"
+                class="preset-button"
+                data-seconds="60"
+              >
+                1:00
+              </button>
+              <button
+                type="button"
+                class="preset-button"
+                data-seconds="120"
+              >
+                2:00
+              </button>
+              <button
+                type="button"
+                class="preset-button"
+                data-seconds="300"
+              >
+                5:00
+              </button>
+            </div>
+
+            <div class="schedule-actions">
+              <button
+                class="primary-button"
+                id="scheduleBtn"
+                type="button"
+              >
+                Programar pausa
+              </button>
+
+              <button
+                class="secondary-button"
+                id="cancelScheduleBtn"
+                type="button"
+                disabled
+              >
+                Cancelar
+              </button>
+            </div>
+
+            <div
+              class="status-box"
+              id="statusBox"
+              role="status"
+              aria-live="polite"
+            >
+              No hay una pausa programada.
+            </div>
+          </section>
+
+          <section class="shortcuts-card">
+            <h2>Atajos</h2>
+            <dl>
+              <div>
+                <dt>Espacio o K</dt>
+                <dd>Reproducir o pausar</dd>
+              </div>
+              <div>
+                <dt>M</dt>
+                <dd>Silenciar</dd>
+              </div>
+              <div>
+                <dt>F</dt>
+                <dd>Pantalla completa</dd>
+              </div>
+              <div>
+                <dt>Flechas</dt>
+                <dd>Avanzar o retroceder 5 segundos</dd>
+              </div>
+            </dl>
+          </section>
+        </aside>
+      </section>
+    </main>
+
+    <script src="./script.js"></script>
+  </body>
+</html>
